@@ -1,0 +1,142 @@
+use jblog;
+select * from user;
+select * from blog;
+select * from category;
+select * from comment;
+select * from post;
+
+delete from user;
+delete from blog;
+
+INSERT ALL INTO user values(null, 'test', password('test'), 'test', now())
+		   INTO blog VALUES(null);
+           
+BEGIN;
+INSERT INTO user
+  VALUES(null, 'test', password('test'), 'test', now());
+INSERT INTO blog
+  VALUES(1, 'test', null);
+COMMIT;
+
+use jblog;
+
+select * from blog;
+
+insert into category values(null, '미분류', 0, '아직 어디로갈지 몰라');
+
+
+select no, id
+from user
+where id = 'myroom9'
+and password = ''
+and name ='';
+
+select B.no, B.title, B.content, B.cnt, A.no, B.category_no
+FROM (select A.no AS 'no'
+from user A, blog B
+where A.no = B.no
+and A.no=3) A, post B
+where A.no = B.blog_no;
+
+insert into post values(null, '첫 블로그 글이다.', '블로그 내용', 0, 3, 1);
+
+select * 
+from comment 
+where post_no = '1';
+
+insert into comment values(null, '안원휘', date_format(now(), '%Y-%m-%d %h:%i:%s'), '댓글이닷', 4);
+
+ALTER TABLE category AUTO_INCREMENT=1;
+ALTER TABLE blog AUTO_INCREMENT=1;
+ALTER TABLE user AUTO_INCREMENT=1;
+ALTER TABLE post AUTO_INCREMENT=1;
+ALTER TABLE comment AUTO_INCREMENT=1;
+select id from user where id = "test";
+use jblog;
+select * from user;
+
+select category.no, count(blog_no) as cnt, name, explanation
+from category
+left join post on category.no = post.category_no
+where blog_no = 15
+group by category.no;
+
+select *
+from post
+left join category on post.blog_no = category.user_no and post.category_no = category.no
+union
+select *
+from post
+right join category on post.blog_no = category.user_no and post.category_no = category.no;
+#left join post on category.no = post.category_no
+#where post.blog_no = 15
+#group by category.no;
+
+select cno, count(pno), name, explanation
+from (select category.no as cno, post.no as pno, category.name, category.explanation
+from post
+left join category on post.blog_no = category.user_no and post.category_no = category.no
+union
+select category.no as cno, post.no as pno, category.name, category.explanation
+from post
+right join category on post.blog_no = category.user_no and post.category_no = category.no) a
+group by cno;
+
+select category.no, count(post.no) as cnt, category.name, category.explanation
+		from post A
+		left join category on A.blog_no = category.user_no
+		left join post on category.no = post.category_no
+		where A.blog_no = 15
+		group by category.no;
+
+select * from user where id='test';
+select logo from user where id=123;
+
+select * from post;
+select * from blog;
+
+select logo
+from blog A, user B
+where A.no = B.no
+  and B.no = 15;
+select * from category;
+select * from post;
+alter table category add constraint
+category_cas foreign key(no)
+references post(category_no) on delete cascade;
+
+alter table post add constraint
+post_cas foreign key(category_no)
+references category(no) on delete cascade;
+
+SELECT *
+FROM post A, blog B
+WHERE A.blog_no = B.no
+  AND B.no = 15
+ORDER BY B.no DESC; 
+
+SELECT A.title as title, A.content as content
+FROM post A, blog B
+WHERE A.blog_no = B.no
+  AND B.no = 15
+ORDER BY B.no DESC limit 1; 
+
+select no, name, logo from blog 
+where no = 15 and category_no = 1;
+
+select * from post;
+
+SELECT B.no, B.title, B.content, B.reg_date 
+FROM category A, 
+(SELECT A.no as no, A.title as title, A.content as content, A.reg_date as reg_date, A.category_no
+	      FROM post A, blog B
+		 WHERE A.blog_no = B.no
+		   AND B.no = 15
+		 ORDER BY B.no DESC) B
+WHERE A.no = B.category_no
+  AND A.no = 3;
+  
+  select * from category;
+  
+  select no from user where id = 1;
+  select * from blog;
